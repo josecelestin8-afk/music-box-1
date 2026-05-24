@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: musicbox-deployment
+  labels:
+    app: musicbox
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: musicbox
+
+  template:
+    metadata:
+      labels:
+        app: musicbox
+
+    spec:
+
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;"
+            ]
+
+      containers:
+        - name: musicbox
+          image: musicbox:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 3000
+
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "64Mi"
+
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+
+          env:
+            - name: NODE_ENV
+              value: "production"
+
+            - name: DB_HOST
+              value: "mysql"
+
+            - name: DB_PORT
+              value: "3306"
+
+            - name: DB_USER
+              value: "root"
+
+            - name: DB_PASSWORD
+              value: "password"
+
+            - name: DB_NAME
+              value: "cloudmusic"
+
+          volumeMounts:
+            - name: uploads-storage
+              mountPath: /app/uploads
+
+      volumes:
+        - name: uploads-storage
+          persistentVolumeClaim:
+            claimName: uploads-pvc
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uploads-pvc
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+  resources:
+    requests:
+      storage: 2Gi
+
+  storageClassName: standard
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: musicbox-service
+
+spec:
+  type: NodePort
+
+  selector:
+    app: musicbox
+
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30080

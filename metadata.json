@@ -1,0 +1,6 @@
+{
+  "name": "Music Box",
+  "description": "Application de streaming de musique et gestion de fichiers audio avec rôles admin/visiteur et comptes sécurisés.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

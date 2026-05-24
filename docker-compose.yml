@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  musicbox:
+    build: .
+    image: musicbox:latest
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
