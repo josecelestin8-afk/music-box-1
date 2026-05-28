@@ -22,66 +22,42 @@ spec:
       initContainers:
         - name: wait-for-mysql
           image: busybox
-          imagePullPolicy: IfNotPresent  # ← CRUCIAL POUR FONCTIONNER SANS INTERNET
+          imagePullPolicy: IfNotPresent
           command:
-            [
-              "sh",
-              "-c",
-              "until wget -qO- mysql:3306; do echo waiting for mysql; sleep 2; done;"
-            ]
-          # command:
-          #   [
-          #     "sh",
-          #     "-c",
-          #     "until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;"
-          #   ]
+            - sh
+            - -c
+            - until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;
 
-      containers:
-        - name: musicbox
-          # image: musicbox:latest
-          image: gcr.io/gcp-eni-497717/musicbox
-          # imagePullPolicy: IfNotPresent
-          imagePullPolicy: Always
+    containers:
+      - name: musicbox
+        image: gcr.io/gcp-eni-497717/musicbox
+        imagePullPolicy: IfNotPresent
 
-          ports:
-            - containerPort: 3000
+        ports:
+          - containerPort: 3000
 
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "64Mi"
+        env:
+          - name: NODE_ENV
+            value: "production"
+          - name: DB_HOST
+            value: "mysql"
+          - name: DB_PORT
+            value: "3306"
+          - name: DB_USER
+            value: "root"
+          - name: DB_PASSWORD
+            value: "password"
+          - name: DB_NAME
+            value: "cloudmusic"
 
-            limits:
-              cpu: "500m"
-              memory: "256Mi"
+        volumeMounts:
+          - name: uploads-storage
+            mountPath: /app/uploads
 
-          env:
-            - name: NODE_ENV
-              value: "production"
-
-            - name: DB_HOST
-              value: "mysql"
-
-            - name: DB_PORT
-              value: "3306"
-
-            - name: DB_USER
-              value: "root"
-
-            - name: DB_PASSWORD
-              value: "password"
-
-            - name: DB_NAME
-              value: "cloudmusic"
-
-          volumeMounts:
-            - name: uploads-storage
-              mountPath: /app/uploads
-
-      volumes:
-        - name: uploads-storage
-          persistentVolumeClaim:
-            claimName: uploads-pvc
+    volumes:
+      - name: uploads-storage
+        persistentVolumeClaim:
+          claimName: uploads-pvc
 
 ---
 apiVersion: v1
