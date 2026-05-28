@@ -27,13 +27,21 @@ spec:
             [
               "sh",
               "-c",
-              "until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;"
+              "until wget -qO- mysql:3306; do echo waiting for mysql; sleep 2; done;"
             ]
+          # command:
+          #   [
+          #     "sh",
+          #     "-c",
+          #     "until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;"
+          #   ]
 
       containers:
         - name: musicbox
-          image: musicbox:latest
-          imagePullPolicy: IfNotPresent
+          # image: musicbox:latest
+          image: gcr.io/gcp-eni-497717/musicbox
+          # imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 3000
@@ -107,4 +115,5 @@ spec:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-      nodePort: 30080
+      type: LoadBalancer
+      # nodePort: 30080
