@@ -17,7 +17,7 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 60   # ✅ FIX IMPORTANT (était 10%)
+          averageUtilization: 10   # ✅ FIX IMPORTANT (était 10%)
 
   behavior:
     scaleUp:

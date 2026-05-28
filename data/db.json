@@ -1,0 +1,43 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "nom": "Administrateur",
+      "email": "admin@musicbox.fr",
+      "mdp": "$2b$10$8KH9AS0XHcfowKrvpaiyBuy8whlEIoFHNcDlTttBLmTIfixDKCALC",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "nom": "Jean Visiteur",
+      "email": "user@musicbox.fr",
+      "mdp": "$2b$10$WnSCXZbKCJwtl16PzHrc8Ou0GoDvb63w2fTYlVXKvlvdsLGK41D22",
+      "role": "visiteur"
+    }
+  ],
+  "music": [
+    {
+      "id": 1,
+      "titre": "Midnight Drive",
+      "artiste": "Synthwave Horizon",
+      "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop&q=60",
+      "file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+    },
+    {
+      "id": 2,
+      "titre": "Summer Chillout",
+      "artiste": "Acoustic Sunset",
+      "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60",
+      "file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+    },
+    {
+      "id": 3,
+      "titre": "Cyberpunk Alley",
+      "artiste": "Neon Grid",
+      "image": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=60",
+      "file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+    }
+  ],
+  "userAutoId": 3,
+  "musicAutoId": 4
+}
