@@ -18,7 +18,6 @@ spec:
         app: musicbox
 
     spec:
-
       initContainers:
         - name: wait-for-mysql
           image: busybox
@@ -28,68 +27,33 @@ spec:
             - -c
             - until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;
 
-    containers:
-      - name: musicbox
-        image: gcr.io/gcp-eni-497717/musicbox
-        imagePullPolicy: IfNotPresent
+      containers:
+        - name: musicbox
+          image: gcr.io/gcp-eni-497717/musicbox
+          imagePullPolicy: IfNotPresent
 
-        ports:
-          - containerPort: 3000
+          ports:
+            - containerPort: 3000
 
-        env:
-          - name: NODE_ENV
-            value: "production"
-          - name: DB_HOST
-            value: "mysql"
-          - name: DB_PORT
-            value: "3306"
-          - name: DB_USER
-            value: "root"
-          - name: DB_PASSWORD
-            value: "password"
-          - name: DB_NAME
-            value: "cloudmusic"
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: DB_HOST
+              value: "mysql"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USER
+              value: "root"
+            - name: DB_PASSWORD
+              value: "password"
+            - name: DB_NAME
+              value: "cloudmusic"
 
-        volumeMounts:
-          - name: uploads-storage
-            mountPath: /app/uploads
+          volumeMounts:
+            - name: uploads-storage
+              mountPath: /app/uploads
 
-    volumes:
-      - name: uploads-storage
-        persistentVolumeClaim:
-          claimName: uploads-pvc
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: uploads-pvc
-
-spec:
-  accessModes:
-    - ReadWriteOnce
-
-  resources:
-    requests:
-      storage: 2Gi
-
-  storageClassName: standard
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: musicbox-service
-
-spec:
-  # type: NodePort
-   type: LoadBalancer
-
-  selector:
-    app: musicbox
-
-  ports:
-    - protocol: TCP
-      port: 3000
-      targetPort: 3000
-      # nodePort: 30080
+      volumes:
+        - name: uploads-storage
+          persistentVolumeClaim:
+            claimName: uploads-pvc
